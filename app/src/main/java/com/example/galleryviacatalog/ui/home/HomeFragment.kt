@@ -1,6 +1,7 @@
 package com.example.galleryviacatalog.ui.home
 
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -24,17 +25,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         binding.galleryRecycler.adapter = galleryPhotoAdapter
     }
 
-    private fun onItemClick(photoId: Int) {
-        Toast.makeText(requireContext(), "$photoId", Toast.LENGTH_SHORT).show()
+    private fun onItemClick(photoId: String) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionNavigationHomeToNavigationDashboard(
+                photo = photoId
+            )
+        )
     }
 
     private fun onItemLongClick(selectedItems: List<Int>) {
         binding.deleteItem.setOnClickListener {
             // Обработка удаления выбранных элементов
             selectedItems.forEach { id ->
-
+                viewModel.delete(id)
             }
-            Toast.makeText(requireContext(), "$selectedItems", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -50,6 +55,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     override fun launchObservers() {
         viewModel.getStats().observe(viewLifecycleOwner) {
             galleryPhotoAdapter.submitList(it.banners.toMutableList())
+            if (it.banners.isEmpty()){
+                binding.ivDelete.isVisible = false
+                binding.deleteItem.isVisible = false
+            }
         }
     }
 }

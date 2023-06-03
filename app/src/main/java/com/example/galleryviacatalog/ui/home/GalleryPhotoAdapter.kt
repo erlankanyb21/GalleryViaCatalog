@@ -12,7 +12,7 @@ import com.example.galleryviacatalog.databinding.ItemGalleryRvBinding
 import com.example.galleryviacatalog.ui.home.model.GetProfile.Banner
 
 class GalleryPhotoAdapter(
-    private val onItemClick: (photoId: Int) -> Unit,
+    private val onItemClick: (photoId: String) -> Unit,
     private val onItemLongClick: (selectedItems: List<Int>) -> Unit
 ) : ListAdapter<Banner, GalleryPhotoAdapter.PhotoViewHolder>(PhotoDiffCallback()) {
 
@@ -44,14 +44,10 @@ class GalleryPhotoAdapter(
                 if (isSelectionMode) {
                     toggleItemSelection(photoUri.id)
                 } else {
-                    onItemClick(photoUri.id)
+                    onItemClick(photoUri.photo)
                 }
             }
         }
-    }
-
-    fun getSelectedItems(): List<Int> {
-        return selectedItems.toList()
     }
 
     private fun toggleItemSelection(photoId: Int) {
