@@ -1,6 +1,8 @@
 package com.example.galleryviacatalog.ui.home
 
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +19,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
     private lateinit var galleryPhotoAdapter: GalleryPhotoAdapter
 
     override fun initialize() {
+        viewModel.getStats()
         setUpRecycler()
     }
 
@@ -35,11 +38,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     private fun onItemLongClick(selectedItems: List<Int>) {
         binding.deleteItem.setOnClickListener {
-            // Обработка удаления выбранных элементов
-            selectedItems.forEach { id ->
-                viewModel.delete(id)
-            }
-            Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT).show()
+            val alertDialog = AlertDialog.Builder(requireContext())
+                .setTitle("Вы действительно хотите удалить выбранные элементы?")
+                .setNegativeButton("Отменить") { dialog, _ ->
+                    dialog.dismiss()
+                }.setPositiveButton("Удалить") { dialog, _ ->
+                    selectedItems.forEach { id ->
+                        viewModel.delete(id)
+                    }
+                    Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT)
+                        .show()
+                    dialog.dismiss()
+                }.create()
+
+            alertDialog.show()
         }
     }
 
@@ -50,14 +62,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         binding.ivDelete.setOnClickListener {
             galleryPhotoAdapter.selectAllItems()
         }
+        binding.ivCirclePlusBtn.setOnClickListener {
+            Toast.makeText(requireContext(), "$id", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun launchObservers() {
         viewModel.getStats().observe(viewLifecycleOwner) {
-            galleryPhotoAdapter.submitList(it.banners.toMutableList())
-            if (it.banners.isEmpty()){
-                binding.ivDelete.isVisible = false
-                binding.deleteItem.isVisible = false
+            if (it.banners.isEmpty()) {
+                binding.emptyLayout.visibility = View.VISIBLE
+            } else {
+                galleryPhotoAdapter.submitList(it.banners.toMutableList())
+                binding.ivCirclePlusBtn.visibility = View.GONE
             }
         }
     }

@@ -19,7 +19,7 @@ class AuthInterceptor(
             request = chain.request().newBuilder()
                 .header(
                     "Authorization",
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1Nzk1OTg3LCJqdGkiOiI4ZTI1MDczZjFmNWY0ODRiODk5YWJkODUwZWY1OGVjNyIsInVzZXJfaWQiOjEyMjMwfQ.Oq16TH5LJz0eZ14Yf1UZe6IO_Xg27yA3pP6wHbZvgZA"
+                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg1ODg0OTQ5LCJqdGkiOiJiYTkzY2NjMzUxNTc0ZDQzYTk1YWMzMWUzNWFkMzM3YSIsInVzZXJfaWQiOjEyMjMwfQ.Ljstjr_SlEKI9jvcAKjFJfhX-j1XWFSWhipztI5144g"
                 )
                 .build()
         }

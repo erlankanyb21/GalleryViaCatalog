@@ -1,6 +1,7 @@
 package com.example.galleryviacatalog.ui.home
 
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -66,11 +67,13 @@ class GalleryPhotoAdapter(
         notifyItemChanged(currentList.indexOfFirst { it.id == photoId })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun enterSelectionMode() {
         isSelectionMode = true
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun exitSelectionMode() {
         isSelectionMode = false
         notifyDataSetChanged()
