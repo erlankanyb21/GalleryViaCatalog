@@ -117,6 +117,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteItem"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         app:cornerRadius="12dp"

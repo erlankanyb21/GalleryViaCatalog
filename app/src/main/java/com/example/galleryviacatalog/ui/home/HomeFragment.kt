@@ -8,26 +8,34 @@ import com.example.galleryviacatalog.R
 import com.example.galleryviacatalog.databinding.FragmentHomeBinding
 import com.example.galleryviacatalog.ui.home.base.BaseFragment
 
-class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>(R.layout.fragment_home) {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.fragment_home) {
 
     override val binding by viewBinding(FragmentHomeBinding::bind)
-
     override val viewModel by viewModels<HomeViewModel>()
 
-    private val galleryPhotoAdapter by lazy { GalleryPhotoAdapter(this::onItemClick, this::onItemLongClick) }
-
-    private fun onItemClick(ints: List<Int>) {
-        Toast.makeText(requireContext(), "$ints", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun onItemLongClick(s: Int) {}
+    private lateinit var galleryPhotoAdapter: GalleryPhotoAdapter
 
     override fun initialize() {
         setUpRecycler()
     }
 
     private fun setUpRecycler() {
+        galleryPhotoAdapter = GalleryPhotoAdapter(this::onItemClick, this::onItemLongClick)
         binding.galleryRecycler.adapter = galleryPhotoAdapter
+    }
+
+    private fun onItemClick(photoId: Int) {
+        Toast.makeText(requireContext(), "$photoId", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onItemLongClick(selectedItems: List<Int>) {
+        binding.deleteItem.setOnClickListener {
+            // Обработка удаления выбранных элементов
+            selectedItems.forEach { id ->
+
+            }
+            Toast.makeText(requireContext(), "$selectedItems", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun constructListeners() {
@@ -41,7 +49,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>(R.layout.fr
 
     override fun launchObservers() {
         viewModel.getStats().observe(viewLifecycleOwner) {
-           galleryPhotoAdapter.submitList(it.banners.toMutableList())
+            galleryPhotoAdapter.submitList(it.banners.toMutableList())
         }
     }
 }
