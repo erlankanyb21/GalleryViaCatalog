@@ -26,6 +26,9 @@
             android:name="photo"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 
     <fragment

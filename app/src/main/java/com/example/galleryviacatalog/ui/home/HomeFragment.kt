@@ -56,10 +56,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         binding.galleryRecycler.adapter = galleryPhotoAdapter
     }
 
-    private fun onItemClick(photoId: String) {
+    private fun onItemClick(photoId: String, id:Int) {
         findNavController().navigate(
             HomeFragmentDirections.actionNavigationHomeToNavigationDashboard(
-                photo = photoId
+                photo = photoId,
+                id = id
             )
         )
     }
