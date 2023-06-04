@@ -26,6 +26,7 @@ class GalleryPhotoAdapter(
 ) : ListAdapter<Banner, GalleryPhotoAdapter.PhotoViewHolder>(PhotoDiffCallback()) {
 
     private val selectedItems: MutableSet<Int> = mutableSetOf()
+
     private var isSelectionMode: Boolean = false
 
     /**
@@ -44,7 +45,7 @@ class GalleryPhotoAdapter(
         fun bind(photoUri: Banner) {
             val isSelected = selectedItems.contains(photoUri.id)
 
-            binding.rbCheck.isVisible = isSelectionMode && isSelected
+            binding.rbCheck.isVisible = isSelectionMode
             binding.rbCheck.isChecked = isSelected
 
             binding.galleryPhoto.load(photoUri.photo) {

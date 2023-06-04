@@ -102,6 +102,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         binding.ivDelete.setOnClickListener {
             galleryPhotoAdapter?.selectAllItems()
         }
+
         binding.ivCirclePlusBtn.setOnClickListener {
             openImageGallery()
         }
