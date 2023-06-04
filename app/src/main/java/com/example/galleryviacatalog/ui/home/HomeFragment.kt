@@ -37,12 +37,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     private lateinit var galleryActivityResultLauncher: ActivityResultLauncher<Intent>
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initialize() {
         setUpRecycler()
         constructListeners()
 
-        viewModel.getStats().observe(viewLifecycleOwner) { it ->
+        viewModel.getStats().observe(viewLifecycleOwner) {
             if (it.banners.isEmpty()) {
                 binding.emptyLayout.visibility = View.VISIBLE
             } else {
@@ -111,29 +110,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Initialize galleryActivityResultLauncher
-        galleryActivityResultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                    val selectedImageUri = result.data?.data
-                    selectedImageUri?.let { uri ->
-                        val imagePath = getImagePath(uri)
-                        val imageBytes = getImageBytes(imagePath)
-                        viewModel.addGalleryPhoto(imageBytes)
-                            .observe(viewLifecycleOwner) { photoResponse ->
-                                Toast.makeText(
-                                    requireContext(), "${photoResponse.photo}", Toast.LENGTH_LONG
-                                ).show()
-                            }
-                    } ?: Toast.makeText(
-                        requireContext(), "Не удалось получить изображение", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-    }
-
     private fun openImageGallery() {
         val permission = Manifest.permission.READ_EXTERNAL_STORAGE
         val grant = PackageManager.PERMISSION_GRANTED
@@ -154,6 +130,29 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
                 type = "image/*"
             }
         galleryActivityResultLauncher.launch(intent)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Initialize galleryActivityResultLauncher
+        galleryActivityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                    val selectedImageUri = result.data?.data
+                    selectedImageUri?.let { uri ->
+                        val imagePath = getImagePath(uri)
+                        val imageBytes = getImageBytes(imagePath)
+                        viewModel.addGalleryPhoto(imageBytes)
+                            .observe(viewLifecycleOwner) { photoResponse ->
+                                Toast.makeText(
+                                    requireContext(), photoResponse.photo, Toast.LENGTH_LONG
+                                ).show()
+                            }
+                    } ?: Toast.makeText(
+                        requireContext(), "Не удалось получить изображение", Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
     }
 
     private fun getImagePath(uri: Uri): String {
