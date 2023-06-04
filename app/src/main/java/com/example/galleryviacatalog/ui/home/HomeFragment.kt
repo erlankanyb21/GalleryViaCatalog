@@ -21,9 +21,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.galleryviacatalog.R
 import com.example.galleryviacatalog.databinding.FragmentHomeBinding
 import com.example.galleryviacatalog.ui.home.base.BaseFragment
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.fragment_home) {
@@ -81,18 +78,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             }
         }
         binding.deleteItem.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Вы действительно хотите удалить выбранные элементы?")
-                .setNegativeButton("Отменить") { dialog, _ ->
-                    dialog.dismiss()
-                }.setPositiveButton("Удалить") { dialog, _ ->
-                    selectedItems.forEach { id ->
-                        viewModel.delete(id)
-                    }
-                    Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT)
-                        .show()
-                    dialog.dismiss()
-                }.create().show()
+            if (selectedItems.isNotEmpty()){
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Вы действительно хотите удалить выбранные элементы?")
+                    .setNegativeButton("Отменить") { dialog, _ ->
+                        dialog.dismiss()
+                    }.setPositiveButton("Удалить") { dialog, _ ->
+                        selectedItems.forEach { id ->
+                            viewModel.delete(id)
+                        }
+                        Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT)
+                            .show()
+                        dialog.dismiss()
+                    }.create().show()
+            }
         }
     }
 
@@ -119,8 +118,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK && result.data != null) {
                     val selectedImageUri = result.data?.data
-                    if (selectedImageUri != null) {
-                        val imagePath = getImagePath(selectedImageUri)
+                    selectedImageUri?.let { uri ->
+                        val imagePath = getImagePath(uri)
                         val imageBytes = getImageBytes(imagePath)
                         viewModel.addGalleryPhoto(imageBytes)
                             .observe(viewLifecycleOwner) { photoResponse ->
@@ -128,11 +127,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
                                     requireContext(), "${photoResponse.photo}", Toast.LENGTH_LONG
                                 ).show()
                             }
-                    } else {
-                        Toast.makeText(
-                            requireContext(), "Не удалось получить изображение", Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    } ?: Toast.makeText(
+                        requireContext(), "Не удалось получить изображение", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
