@@ -10,13 +10,13 @@
     <ImageView
         android:id="@+id/image_characters_photo_detail"
         android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_height="wrap_content"
         tools:src="@tools:sample/avatars"
         tools:ignore="ContentDescription" />
 
