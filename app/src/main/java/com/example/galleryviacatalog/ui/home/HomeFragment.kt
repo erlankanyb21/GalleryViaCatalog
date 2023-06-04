@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -56,7 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         binding.galleryRecycler.adapter = galleryPhotoAdapter
     }
 
-    private fun onItemClick(photoId: String, id:Int) {
+    private fun onItemClick(photoId: String, id: Int) {
         findNavController().navigate(
             HomeFragmentDirections.actionNavigationHomeToNavigationDashboard(
                 photo = photoId,
@@ -65,20 +67,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
         )
     }
 
-    private fun onItemLongClick(selectedItems: List<Int>) {
+    private fun onItemLongClick(selectedItems: List<Int>) = with(binding) {
+
         when (selectedItems.isEmpty()) {
             true -> {
-                binding.ivDelete.isVisible = false
-                binding.ivAdd.isVisible = true
+                ivDelete.isVisible = false
+                ivAdd.isVisible = true
+                deleteItem.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4A637C"))
+                deleteItem.isEnabled = false
             }
 
             false -> {
-                binding.ivDelete.isVisible = true
-                binding.ivAdd.isVisible = false
+                ivDelete.isVisible = true
+                ivAdd.isVisible = false
+                deleteItem.backgroundTintList = ColorStateList.valueOf(Color.BLUE)
+                deleteItem.isEnabled = true
             }
         }
-        binding.deleteItem.setOnClickListener {
-            if (selectedItems.isNotEmpty()){
+        deleteItem.setOnClickListener {
+            if (selectedItems.isNotEmpty()) {
                 AlertDialog.Builder(requireContext())
                     .setTitle("Вы действительно хотите удалить выбранные элементы?")
                     .setNegativeButton("Отменить") { dialog, _ ->
@@ -87,7 +94,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
                         selectedItems.forEach { id ->
                             viewModel.delete(id)
                         }
-                        Toast.makeText(requireContext(), "$selectedItems Deleted", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            requireContext(),
+                            "$selectedItems Deleted",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                         dialog.dismiss()
                     }.create().show()
