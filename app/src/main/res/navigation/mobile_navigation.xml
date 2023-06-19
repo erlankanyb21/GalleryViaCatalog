@@ -36,4 +36,9 @@
         android:name="com.example.galleryviacatalog.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/createCatalogFragment"
+        android:name="com.example.galleryviacatalog.ui.notifications.CreateCatalogFragment"
+        android:label="CreateCatalogFragment"
+        tools:layout="@layout/fragment_create_catalog"/>
 </navigation>

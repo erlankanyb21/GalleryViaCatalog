@@ -1,42 +1,38 @@
 package com.example.galleryviacatalog.ui.notifications
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.galleryviacatalog.R
 import com.example.galleryviacatalog.databinding.FragmentNotificationsBinding
+import com.example.galleryviacatalog.ui.home.base.BaseFragment
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : BaseFragment<FragmentNotificationsBinding,NotificationsViewModel>(R.layout.fragment_notifications) {
+    override val binding by viewBinding(FragmentNotificationsBinding::bind)
+    override val viewModel by viewModels<NotificationsViewModel>()
+    private val catalogAdapter by lazy {
+        CatalogAdapter(this::onItemClick,this::onItemLongClick)
+    }
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private fun onItemLongClick(selectedItems: List<Int>) {
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+    private fun onItemClick(uri: String, id: Int) {
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    }
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun initialize() {
+        binding.rvCatalog.adapter = catalogAdapter
+    }
+
+    override fun constructListeners() {
+
+    }
+
+    override fun launchObservers() {
+        viewModel.getProducts().observe(viewLifecycleOwner) {
+            catalogAdapter.submitList(it.results)
         }
-        return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

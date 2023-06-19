@@ -108,7 +108,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(R.layout.f
 
     override fun constructListeners() {
         binding.ivBack.setOnClickListener {
-            findNavController().navigate(R.id.navigation_notifications)
+            findNavController().navigate(R.id.createCatalogFragment)
         }
         binding.ivDelete.setOnClickListener {
             galleryPhotoAdapter?.selectAllItems()
